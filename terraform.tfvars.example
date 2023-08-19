@@ -1,0 +1,11 @@
+tenant        = "your F5 XC tenant name"
+tenant_suffix = "unique id suffix of your F5 XC tenant"
+useremail     = "your email address representing your F5 XC account"
+
+sentence_app_fqdn        = "demo-sentence.example.com"
+sentence_app_namespace   = "demo-sentence"
+sentence_app_site_region = "ves-io-dallas"
+
+nginx_app_fqdn        = "demo-nginx-auth.example.com"
+nginx_app_namespace   = "demo-nginx-auth"
+nginx_app_site_region = "ves-io-seattle"

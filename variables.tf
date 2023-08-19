@@ -13,7 +13,8 @@ variable "useremail" {
 }
 
 variable "sentence_app_name" {
-  type = string
+  type    = string
+  default = "demo-sentence"
 }
 
 variable "sentence_app_fqdn" {
@@ -21,7 +22,8 @@ variable "sentence_app_fqdn" {
 }
 
 variable "sentence_app_kubeconfig_file" {
-  type = string
+  type    = string
+  default = "sentence-app-kubeconfig.yaml"
 }
 
 variable "sentence_app_namespace" {
@@ -29,7 +31,8 @@ variable "sentence_app_namespace" {
 }
 
 variable "sentence_app_project_prefix" {
-  type = string
+  type    = string
+  default = "sentence-app"
 }
 
 variable "sentence_app_site_region" {
@@ -38,7 +41,8 @@ variable "sentence_app_site_region" {
 }
 
 variable "nginx_app_name" {
-  type = string
+  type    = string
+  default = "demo-nginx-auth"
 }
 
 variable "nginx_app_fqdn" {
@@ -46,7 +50,8 @@ variable "nginx_app_fqdn" {
 }
 
 variable "nginx_app_kubeconfig_file" {
-  type = string
+  type    = string
+  default = "nginx-auth-kubeconfig.yaml"
 }
 
 variable "nginx_app_namespace" {
@@ -54,7 +59,8 @@ variable "nginx_app_namespace" {
 }
 
 variable "nginx_app_project_prefix" {
-  type = string
+  type    = string
+  default = "nginx-auth"
 }
 
 variable "nginx_app_site_region" {
