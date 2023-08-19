@@ -1,5 +1,9 @@
+.DS_Store
+*.crt
+*.key
 .terraform
 terraform.tfvars
-terraform.tfstate
-terraform.tfstate.backup
+terraform.tfstate*
 *kubeconfig.yaml
+oidc-config-secret.yaml
+install-sentence-app/tmp/*.yaml

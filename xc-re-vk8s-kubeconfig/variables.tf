@@ -12,10 +12,12 @@ variable "namespace" {
   type = string
 }
 
-variable "api_token" {
-  type = string
-}
 
 variable "kubeconfig_file" {
   type = string
+}
+
+variable "kubeconfig_expiration_days" {
+  type    = number
+  default = 30
 }

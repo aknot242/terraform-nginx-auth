@@ -1,7 +1,3 @@
-provider "volterra" {
-  url = local.xc_provider_url
-}
-
 resource "random_id" "index" {
   byte_length = 2
 }
