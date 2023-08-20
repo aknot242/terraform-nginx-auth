@@ -39,10 +39,10 @@ module "install-sentence-app" {
   tenant_suffix     = var.tenant_suffix
   namespace         = var.sentence_app_namespace
   project_prefix    = var.sentence_app_project_prefix
+  virtual_site_name = module.sentence-xc-re-vk8s.virtual_site_name
   kubeconfig_file   = module.sentence-xc-re-vk8s-kubeconfig.kubeconfig_file
   app_name          = var.sentence_app_name
   app_fqdn          = var.sentence_app_fqdn
-  virtual_site_name = module.sentence-xc-re-vk8s.virtual_site_name
 }
 
 module "nginx-xc-re-vk8s" {
@@ -68,12 +68,17 @@ module "install-nginx-auth" {
   providers = {
     kubectl = kubectl.kubectl_nginx_app
   }
-  tenant            = var.tenant
-  tenant_suffix     = var.tenant_suffix
-  namespace         = var.nginx_app_namespace
-  project_prefix    = var.nginx_app_project_prefix
-  kubeconfig_file   = module.nginx-xc-re-vk8s-kubeconfig.kubeconfig_file
-  app_name          = var.nginx_app_name
-  app_fqdn          = var.nginx_app_fqdn
-  virtual_site_name = module.nginx-xc-re-vk8s.virtual_site_name
+  tenant                   = var.tenant
+  tenant_suffix            = var.tenant_suffix
+  namespace                = var.nginx_app_namespace
+  project_prefix           = var.nginx_app_project_prefix
+  virtual_site_name        = module.nginx-xc-re-vk8s.virtual_site_name
+  kubeconfig_file          = module.nginx-xc-re-vk8s-kubeconfig.kubeconfig_file
+  app_name                 = var.nginx_app_name
+  app_fqdn                 = var.nginx_app_fqdn
+  proxied_app_fqdn         = var.sentence_app_fqdn
+  azure_directory_id       = var.azure_directory_id
+  azure_oidc_client_id     = var.azure_oidc_client_id
+  azure_oidc_client_secret = var.azure_oidc_client_secret
+  azure_oidc_hmac_key      = var.azure_oidc_hmac_key
 }

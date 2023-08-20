@@ -9,3 +9,8 @@ sentence_app_site_region = "ves-io-dallas"
 nginx_app_fqdn        = "demo-nginx-auth.example.com"
 nginx_app_namespace   = "demo-nginx-auth"
 nginx_app_site_region = "ves-io-seattle"
+
+azure_directory_id       = "<Azure Tenant (directory) ID>"
+azure_oidc_client_id     = "<Azure Application (client) ID>"
+azure_oidc_client_secret = "<Azure Client Secret Value>"
+azure_oidc_hmac_key      = "window-purple-monkey-scimitar"

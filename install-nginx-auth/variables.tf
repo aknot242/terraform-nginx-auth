@@ -13,6 +13,10 @@ variable "namespace" {
   type = string
 }
 
+variable "project_prefix" {
+  type = string
+}
+
 variable "virtual_site_name" {
   type = string
 }
@@ -22,9 +26,6 @@ variable "mk8s_site_name" {
   default = ""
 }
 
-variable "project_prefix" {
-  type = string
-}
 
 variable "kubeconfig_file" {
   type = string
@@ -53,4 +54,44 @@ variable "nginx_cert_validity_period_hours" {
   type        = number
   description = "The validity period of the certificate generated for NGINX server certificate"
   default     = 8760 # approx 1 year
+}
+
+variable "proxied_app_fqdn" {
+  type        = string
+  description = "The fqdn of the app that NGINX will be proxying"
+}
+
+variable "tmp_folder" {
+  type    = string
+  default = "tmp"
+}
+
+variable "templates_folder" {
+  type    = string
+  default = "templates"
+}
+
+variable "nginx_auth_file" {
+  type    = string
+  default = "nginx-auth"
+}
+
+variable "azure_directory_id" {
+  type        = string
+  description = "The Azure Tenant (directory) ID"
+}
+
+variable "azure_oidc_client_id" {
+  type        = string
+  description = "The Azure Application (client) ID"
+}
+
+variable "azure_oidc_client_secret" {
+  type        = string
+  description = "The Azure Client Secret Value"
+}
+
+variable "azure_oidc_hmac_key" {
+  type        = string
+  description = "The random hmac key phrase"
 }

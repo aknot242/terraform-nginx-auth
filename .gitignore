@@ -5,5 +5,4 @@
 terraform.tfvars
 terraform.tfstate*
 *kubeconfig.yaml
-oidc-config-secret.yaml
-install-sentence-app/tmp/*.yaml
+**/tmp/*.yaml

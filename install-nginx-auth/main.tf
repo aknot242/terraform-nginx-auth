@@ -11,6 +11,11 @@ provider "kubernetes" {
   config_path = var.kubeconfig_file
 }
 
+resource "local_file" "nginx_manifests" {
+  content  = data.template_file.nginx_templates.rendered
+  filename = "${path.module}/${var.tmp_folder}/${var.nginx_auth_file}.yaml"
+}
+
 # Create a private key in PEM format
 resource "tls_private_key" "nginx_private_key" {
   algorithm = "RSA"
@@ -45,6 +50,9 @@ resource "kubernetes_secret" "nginx_tls_secret" {
 resource "kubectl_manifest" "nginx_app_nginx" {
   provider           = kubectl.vk8s
   override_namespace = var.namespace
-  for_each           = toset(data.kubectl_path_documents.nginx_app_nginx_manifests.documents)
+  for_each           = toset(data.kubectl_path_documents.nginx_manifests.documents)
   yaml_body          = each.value
+  depends_on = [
+    local_file.nginx_manifests
+  ]
 }

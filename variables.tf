@@ -68,3 +68,22 @@ variable "nginx_app_site_region" {
   description = "The string referencing an XC RE to deploy to"
 }
 
+variable "azure_directory_id" {
+  type = string
+  description = "The Azure Tenant (directory) ID"
+}
+
+variable "azure_oidc_client_id" {
+  type = string
+  description = "The Azure Application (client) ID"
+}
+
+variable "azure_oidc_client_secret" {
+  type = string
+  description = "The Azure Client Secret Value"
+}
+
+variable "azure_oidc_hmac_key" {
+  type = string
+  description = "The random hmac key phrase"
+}

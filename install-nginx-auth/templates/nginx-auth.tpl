@@ -104,7 +104,7 @@ data:
         error_log /nginx/var/log/nginx/error.log debug;  # Reduce severity level as required
 
         location / {
-            set $upstream_host_name demo-sentence.whatis.cloud;
+            set $upstream_host_name ${proxied_app_fqdn};
             auth_jwt "" token=$session_jwt;
             error_page 401 = @do_oidc_flow;
             auth_jwt_key_request /_jwks_uri;
@@ -189,3 +189,64 @@ data:
         default_type text/plain;
         return 500 $internal_error_message;
     }
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: openid-connect-configuration
+stringData:
+  openid_connect_configuration.conf: |
+    map $host $oidc_authz_endpoint {
+        default "https://login.microsoftonline.com/${azure_directory_id}/oauth2/v2.0/authorize";
+    }
+    map $host $oidc_token_endpoint {
+        default "https://login.microsoftonline.com/${azure_directory_id}/oauth2/v2.0/token";
+    }
+    map $host $oidc_jwt_keyfile {
+        default "https://login.microsoftonline.com/${azure_directory_id}/discovery/v2.0/keys";
+    }
+    map $host $oidc_client {
+        default "${azure_oidc_client_id}";
+    }
+    map $host $oidc_pkce_enable {
+        default 0;
+    }
+    map $host $oidc_client_secret {
+        default "${azure_oidc_client_secret}";
+    }
+    map $host $oidc_scopes {
+        default "email+openid+profile";
+    }
+    map $host $oidc_logout_redirect {
+        default "/_logout"; # Built-in, simple logout page
+    }
+    map $host $oidc_hmac_key {
+        default "${azure_oidc_hmac_key}";
+    }
+    map $host $zone_sync_leeway {
+        default 0; # Time in milliseconds, e.g. (zone_sync_interval * 2 * 1000)
+    }
+    map $proto $oidc_cookie_flags {
+        http  "Path=/; SameSite=lax;"; # For HTTP/plaintext testing
+        https "Path=/; SameSite=lax; HttpOnly; Secure;"; # Production recommendation
+    }
+    map $http_x_forwarded_port $redirect_base {
+        ""      $proto://$host:$server_port;
+        default $proto://$host:$http_x_forwarded_port;
+    }
+    map $http_x_forwarded_proto $proto {
+        ""      $scheme;
+        default $http_x_forwarded_proto;
+    }
+    proxy_cache_path /nginx-cache/jwk levels=1 keys_zone=jwk:64k max_size=1m;
+    keyval_zone zone=oidc_id_tokens:1M state=/nginx-zones/oidc_id_tokens.json timeout=1h;
+    keyval_zone zone=refresh_tokens:1M state=/nginx-zones/refresh_tokens.json timeout=8h;
+    keyval_zone zone=oidc_pkce:128K timeout=90s; # Temporary storage for PKCE code verifier.
+    keyval $cookie_auth_token $session_jwt zone=oidc_id_tokens;   # Exchange cookie for JWT
+    keyval $cookie_auth_token $refresh_token zone=refresh_tokens; # Exchange cookie for refresh token
+    keyval $request_id $new_session zone=oidc_id_tokens; # For initial session creation
+    keyval $request_id $new_refresh zone=refresh_tokens; # ''
+    keyval $pkce_id $pkce_code_verifier zone=oidc_pkce;
+    auth_jwt_claim_set $jwt_audience aud; # In case aud is an array
+    js_import oidc from conf.d/openid_connect.js;
