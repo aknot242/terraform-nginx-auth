@@ -2,7 +2,7 @@
 #
 # Check that vk8s is ready before creating workload resources
 #
-echo "site name: $1"
+echo "cluster name: $1"
 echo "namespace: $2"
 echo "provider_url: $3"
 

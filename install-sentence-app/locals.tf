@@ -1,6 +1,5 @@
 locals {
-  xc_provider_url = format("https://%s.console.ves.volterra.io/api", var.tenant)
-  xc_tenant_full  = format("%s-%s", var.tenant, var.tenant_suffix)
+  xc_tenant_full = format("%s-%s", var.tenant, var.tenant_suffix)
 
   #XC LB
   services = {

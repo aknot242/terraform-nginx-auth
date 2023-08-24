@@ -1,14 +1,16 @@
-data "template_file" "nginx_templates" {
-  template = file("${path.module}/${var.templates_folder}/${var.nginx_auth_file}.tpl")
+data "kubectl_path_documents" "nginx_manifests" {
+  pattern = "${path.module}/${var.templates_folder}/*.tpl"
   vars = {
-    proxied_app_fqdn         = "${var.proxied_app_fqdn}"
+    namespace                = "${var.namespace}"
+    nginx_plus_oidc_image    = "${local.nginx_plus_oidc_image}"
+    nginx_pull_secret_name   = "${var.nginx_pull_secret_name}"
+    app_deployment_region    = "${var.app_deployment_region}"
+    virtual_site_name        = "${var.virtual_site_name}"
+    sentence_app_fqdn        = "${var.sentence_app_fqdn}"
+    app_port                 = "${var.app_port}"
     azure_directory_id       = "${var.azure_directory_id}"
     azure_oidc_client_id     = "${var.azure_oidc_client_id}"
     azure_oidc_client_secret = "${var.azure_oidc_client_secret}"
     azure_oidc_hmac_key      = "${var.azure_oidc_hmac_key}"
   }
-}
-
-data "kubectl_path_documents" "nginx_manifests" {
-  pattern = "${path.module}/${var.tmp_folder}/*.yaml"
 }

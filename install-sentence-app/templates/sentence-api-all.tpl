@@ -1,7 +1,11 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-generator
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -27,6 +31,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-generator
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:
@@ -40,6 +47,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-colors
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -65,6 +75,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-colors
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:
@@ -78,6 +91,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-adjectives
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -103,6 +119,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-adjectives
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:
@@ -116,6 +135,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-animals
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -141,6 +163,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-animals
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:
@@ -154,6 +179,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-locations
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -179,6 +207,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-locations
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:
@@ -192,6 +223,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-backgrounds
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -217,6 +251,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-backgrounds
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:

@@ -6,3 +6,4 @@ terraform.tfvars
 terraform.tfstate*
 *kubeconfig.yaml
 **/tmp/*.yaml
+.terraform.tfstate.lock.info

@@ -3,82 +3,69 @@ provider "volterra" {
 }
 
 provider "kubectl" {
-  alias       = "kubectl_sentence_app"
-  config_path = var.sentence_app_kubeconfig_file
+  config_path = var.kubeconfig_file
 }
 
-provider "kubectl" {
-  alias       = "kubectl_nginx_app"
-  config_path = var.nginx_app_kubeconfig_file
+provider "kubernetes" {
+  config_path = var.kubeconfig_file
 }
 
-module "sentence-xc-re-vk8s" {
+module "xc-virtual-site" {
+  source         = "./xc-virtual-site"
+  namespace      = var.namespace
+  project_prefix = var.project_prefix
+  regions        = format("%s, %s", var.sentence_app_region, var.nginx_app_region)
+}
+
+module "xc-re-vk8s" {
   source         = "./xc-re-vk8s"
   tenant         = var.tenant
-  useremail      = var.useremail
-  namespace      = var.sentence_app_namespace
-  project_prefix = var.sentence_app_project_prefix
-  site_region    = var.sentence_app_site_region
+  namespace      = var.namespace
+  project_prefix = var.project_prefix
+  site_name      = module.xc-virtual-site.virtual_site_name
 }
 
-module "sentence-xc-re-vk8s-kubeconfig" {
+module "xc-re-vk8s-kubeconfig" {
   source          = "./xc-re-vk8s-kubeconfig"
-  tenant          = var.tenant
-  namespace       = var.sentence_app_namespace
-  site_name       = module.sentence-xc-re-vk8s.vk8s_site_name
-  kubeconfig_file = var.sentence_app_kubeconfig_file
-  depends_on      = [module.sentence-xc-re-vk8s]
+  namespace       = var.namespace
+  vk8s_name       = module.xc-re-vk8s.vk8s_name
+  kubeconfig_file = var.kubeconfig_file
+  depends_on      = [module.xc-re-vk8s]
 }
 
 module "install-sentence-app" {
-  source = "./install-sentence-app"
-  providers = {
-    kubectl = kubectl.kubectl_sentence_app
-  }
-  tenant            = var.tenant
-  tenant_suffix     = var.tenant_suffix
-  namespace         = var.sentence_app_namespace
-  project_prefix    = var.sentence_app_project_prefix
-  virtual_site_name = module.sentence-xc-re-vk8s.virtual_site_name
-  kubeconfig_file   = module.sentence-xc-re-vk8s-kubeconfig.kubeconfig_file
-  app_name          = var.sentence_app_name
-  app_fqdn          = var.sentence_app_fqdn
-}
-
-module "nginx-xc-re-vk8s" {
-  source         = "./xc-re-vk8s"
-  tenant         = var.tenant
-  useremail      = var.useremail
-  namespace      = var.nginx_app_namespace
-  project_prefix = var.nginx_app_project_prefix
-  site_region    = var.nginx_app_site_region
-}
-
-module "nginx-xc-re-vk8s-kubeconfig" {
-  source          = "./xc-re-vk8s-kubeconfig"
-  tenant          = var.tenant
-  namespace       = var.nginx_app_namespace
-  site_name       = module.nginx-xc-re-vk8s.vk8s_site_name
-  kubeconfig_file = var.nginx_app_kubeconfig_file
-  depends_on      = [module.nginx-xc-re-vk8s]
+  source                = "./install-sentence-app"
+  tenant                = var.tenant
+  tenant_suffix         = var.tenant_suffix
+  namespace             = var.namespace
+  app_deployment_region = var.sentence_app_region
+  project_prefix        = var.project_prefix
+  virtual_site_name     = module.xc-virtual-site.virtual_site_name
+  kubeconfig_file       = module.xc-re-vk8s-kubeconfig.kubeconfig_file
+  app_name              = var.sentence_app_name
+  app_fqdn              = var.sentence_app_fqdn
 }
 
 module "install-nginx-auth" {
-  source = "./install-nginx-auth"
-  providers = {
-    kubectl = kubectl.kubectl_nginx_app
-  }
-  tenant                   = var.tenant
-  tenant_suffix            = var.tenant_suffix
-  namespace                = var.nginx_app_namespace
-  project_prefix           = var.nginx_app_project_prefix
-  virtual_site_name        = module.nginx-xc-re-vk8s.virtual_site_name
-  kubeconfig_file          = module.nginx-xc-re-vk8s-kubeconfig.kubeconfig_file
-  app_name                 = var.nginx_app_name
-  app_fqdn                 = var.nginx_app_fqdn
-  proxied_app_fqdn         = var.sentence_app_fqdn
-  azure_directory_id       = var.azure_directory_id
-  azure_oidc_client_id     = var.azure_oidc_client_id
-  azure_oidc_client_secret = var.azure_oidc_client_secret
-  azure_oidc_hmac_key      = var.azure_oidc_hmac_key
+  source                         = "./install-nginx-auth"
+  tenant                         = var.tenant
+  tenant_suffix                  = var.tenant_suffix
+  namespace                      = var.namespace
+  app_deployment_region          = var.nginx_app_region
+  project_prefix                 = var.project_prefix
+  virtual_site_name              = module.xc-virtual-site.virtual_site_name
+  kubeconfig_file                = module.xc-re-vk8s-kubeconfig.kubeconfig_file
+  app_name                       = var.nginx_app_name
+  app_fqdn                       = var.nginx_app_fqdn
+  sentence_app_fqdn              = var.sentence_app_fqdn
+  sentence_frontend_service_name = var.sentence_frontend_service_name
+  sentence_frontend_service_port = var.sentence_frontend_service_port
+  nginx_plus_oidc_image_server   = var.nginx_plus_oidc_image_server
+  nginx_plus_oidc_image_owner    = var.nginx_plus_oidc_image_owner
+  nginx_plus_oidc_image_name     = var.nginx_plus_oidc_image_name
+  nginx_plus_oidc_image_token    = var.nginx_plus_oidc_image_token
+  azure_directory_id             = var.azure_directory_id
+  azure_oidc_client_id           = var.azure_oidc_client_id
+  azure_oidc_client_secret       = var.azure_oidc_client_secret
+  azure_oidc_hmac_key            = var.azure_oidc_hmac_key
 }

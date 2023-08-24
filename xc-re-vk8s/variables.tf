@@ -11,11 +11,7 @@ variable "project_prefix" {
   type = string
 }
 
-variable "useremail" {
+variable "site_name" {
   type = string
-}
-
-variable "site_region" {
-  type = string
-  description = "The string referencing an XC RE to deploy to"
+  description = "The string referencing an XC site o deploy to"
 }

@@ -56,6 +56,7 @@ resource "volterra_http_loadbalancer" "lb_https" {
   description                     = format("HTTPS loadbalancer object for %s origin server", var.project_prefix)
   domains                         = [var.app_fqdn]
   advertise_on_public_default_vip = true
+  source_ip_stickiness            = true
   dynamic "routes" {
     for_each = local.routes
     content {
@@ -76,6 +77,10 @@ resource "volterra_http_loadbalancer" "lb_https" {
           request_headers_to_add {
             name  = "X-Forwarded-Port"
             value = var.app_port
+          }
+          request_headers_to_add {
+            name  = "X-Forwarded-Proto"
+            value = "https"
           }
         }
       }

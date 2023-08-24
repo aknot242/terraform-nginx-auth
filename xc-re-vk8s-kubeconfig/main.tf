@@ -1,8 +1,8 @@
 resource "volterra_api_credential" "create_kubeconfig" {
-  name                  = var.site_name
+  name                  = var.vk8s_name
   api_credential_type   = "KUBE_CONFIG"
   virtual_k8s_namespace = var.namespace
-  virtual_k8s_name      = var.site_name
+  virtual_k8s_name      = var.vk8s_name
 }
 
 resource "local_file" "kubeconfig" {

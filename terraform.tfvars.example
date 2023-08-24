@@ -1,14 +1,17 @@
-tenant        = "your F5 XC tenant name"
+tenant        = "your F5 Distributed Cloud tenant name"
 tenant_suffix = "unique id suffix of your F5 XC tenant"
-useremail     = "your email address representing your F5 XC account"
+namespace     = "demo-sentence"
 
-sentence_app_fqdn        = "demo-sentence.example.com"
-sentence_app_namespace   = "demo-sentence"
-sentence_app_site_region = "ves-io-dallas"
+nginx_plus_oidc_image_server = "ghcr.io"
+nginx_plus_oidc_image_owner  = "<your github account>"
+nginx_plus_oidc_image_name   = "nginx-oidc"
+nginx_plus_oidc_image_token  = "<your github token>"
 
-nginx_app_fqdn        = "demo-nginx-auth.example.com"
-nginx_app_namespace   = "demo-nginx-auth"
-nginx_app_site_region = "ves-io-seattle"
+sentence_app_fqdn   = "demo-sentence.example.com"
+sentence_app_region = "ves-io-dallas"
+
+nginx_app_fqdn   = "demo-nginx-auth.example.com"
+nginx_app_region = "ves-io-seattle"
 
 azure_directory_id       = "<Azure Tenant (directory) ID>"
 azure_oidc_client_id     = "<Azure Application (client) ID>"

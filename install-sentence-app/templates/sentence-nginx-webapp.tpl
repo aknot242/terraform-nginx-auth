@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentence-frontend-nginx
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -27,6 +30,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentence-frontend-nginx
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   type: ClusterIP
   selector:

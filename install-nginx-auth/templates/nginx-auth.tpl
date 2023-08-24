@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-auth
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   selector:
     matchLabels:
@@ -13,7 +16,7 @@ spec:
         app: nginx-auth
     spec:
       containers:
-        - image: ghcr.io/aknot242/nginx-oidc:latest
+        - image: ${nginx_plus_oidc_image}
           imagePullPolicy: IfNotPresent
           name: nginx-oidc
           ports:
@@ -44,7 +47,7 @@ spec:
               name: nginx-tls
               readOnly: true
       imagePullSecrets:
-        - name: ghcr
+        - name: ${nginx_pull_secret_name}
       volumes:
         - configMap:
             name: frontend
@@ -73,6 +76,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-auth
+  annotations:
+    ves.io/site: ${app_deployment_region}
+    ves.io/site-name: ${virtual_site_name}
 spec:
   ports:
     - name: http
@@ -104,14 +110,14 @@ data:
         error_log /nginx/var/log/nginx/error.log debug;  # Reduce severity level as required
 
         location / {
-            set $upstream_host_name ${proxied_app_fqdn};
+            set $upstream_host_name ${sentence_app_fqdn};
             auth_jwt "" token=$session_jwt;
             error_page 401 = @do_oidc_flow;
             auth_jwt_key_request /_jwks_uri;
             proxy_ssl_server_name on;
             proxy_ssl_name $upstream_host_name;
             proxy_set_header Host $upstream_host_name;
-            proxy_pass https://$upstream_host_name;
+            proxy_pass https://$upstream_host_name:443;
             access_log /nginx/var/log/nginx/access.log main_jwt;
         }
     }
@@ -125,7 +131,7 @@ data:
   openid_connect.server_conf: |
     set $internal_error_message "NGINX / OpenID Connect login failure\n";
     set $pkce_id "";
-    resolver 8.8.8.8; # Using Google server For DNS lookup of IdP endpoints;
+    resolver 100.127.192.10; # For DNS lookup of IdP endpoints;
     subrequest_output_buffer_size 32k; # To fit a complete tokenset response
     gunzip on; # Decompress IdP responses if necessary
     location = /_jwks_uri {

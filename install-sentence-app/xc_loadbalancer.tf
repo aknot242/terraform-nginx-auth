@@ -55,7 +55,17 @@ resource "volterra_http_loadbalancer" "lb_https" {
   namespace                       = var.namespace
   description                     = format("HTTPS loadbalancer object for %s origin server", var.project_prefix)
   domains                         = [var.app_fqdn]
-  advertise_on_public_default_vip = true
+  advertise_on_public_default_vip = false
+  advertise_custom {
+    advertise_where {
+      vk8s_service {
+        virtual_site {
+          name      = var.virtual_site_name
+          namespace = var.namespace
+        }
+      }
+    }
+  }
   dynamic "routes" {
     for_each = local.routes
     content {
@@ -75,13 +85,20 @@ resource "volterra_http_loadbalancer" "lb_https" {
       }
     }
   }
-  https_auto_cert {
+  https {
     add_hsts              = false
     http_redirect         = true
-    no_mtls               = true
     enable_path_normalize = true
-    tls_config {
-      default_security = true
+    tls_parameters {
+      no_mtls = true
+      tls_certificates {
+        certificate_url = format("string:///%s", base64encode(tls_self_signed_cert.sentence_lb_self_signed_cert.cert_pem))
+        private_key {
+          clear_secret_info {
+            url = format("string:///%s", base64encode(tls_private_key.sentence_lb_private_key.private_key_pem))
+          }
+        }
+      }
     }
   }
 }
