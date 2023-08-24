@@ -12,6 +12,16 @@ variable "namespace" {
   type = string
 }
 
+variable "sentence_app_virtual_site" {
+  type = string
+  default = "sentence-app-vs"
+}
+
+variable "nginx_auth_virtual_site" {
+  type = string
+  default = "nginx-auth-vs"
+}
+
 variable "nginx_plus_oidc_image_server" {
   type        = string
   description = "The image registry server hosting NGINX OIDC image. Example: ghcr.io"

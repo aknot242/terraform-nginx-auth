@@ -1,6 +1,6 @@
 resource "volterra_virtual_site" "virtual_site" {
 
-  name      = format("%s-vs", var.project_prefix)
+  name      = var.virtual_site_name
   namespace = var.namespace
 
   site_selector {

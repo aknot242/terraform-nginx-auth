@@ -38,10 +38,6 @@ variable "project_prefix" {
   type = string
 }
 
-variable "app_deployment_region" {
-  type = string
-}
-
 variable "virtual_site_name" {
   type = string
 }

@@ -2,6 +2,10 @@ variable "namespace" {
   type = string
 }
 
+variable "virtual_site_name" {
+  type = string
+}
+
 variable "project_prefix" {
   type = string
 }

@@ -4,7 +4,6 @@ data "kubectl_path_documents" "nginx_manifests" {
     namespace                = "${var.namespace}"
     nginx_plus_oidc_image    = "${local.nginx_plus_oidc_image}"
     nginx_pull_secret_name   = "${var.nginx_pull_secret_name}"
-    app_deployment_region    = "${var.app_deployment_region}"
     virtual_site_name        = "${var.virtual_site_name}"
     sentence_app_fqdn        = "${var.sentence_app_fqdn}"
     app_port                 = "${var.app_port}"

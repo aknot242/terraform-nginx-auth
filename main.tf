@@ -10,19 +10,29 @@ provider "kubernetes" {
   config_path = var.kubeconfig_file
 }
 
-module "xc-virtual-site" {
-  source         = "./xc-virtual-site"
-  namespace      = var.namespace
-  project_prefix = var.project_prefix
-  regions        = format("%s, %s", var.sentence_app_region, var.nginx_app_region)
+module "xc-virtual-site-sentence" {
+  source            = "./xc-virtual-site"
+  virtual_site_name = var.sentence_app_virtual_site
+  namespace         = var.namespace
+  project_prefix    = var.project_prefix
+  regions           = var.sentence_app_region
+}
+
+module "xc-virtual-site-nginx" {
+  source            = "./xc-virtual-site"
+  virtual_site_name = var.nginx_auth_virtual_site
+  namespace         = var.namespace
+  project_prefix    = var.project_prefix
+  regions           = var.nginx_app_region
 }
 
 module "xc-re-vk8s" {
-  source         = "./xc-re-vk8s"
-  tenant         = var.tenant
-  namespace      = var.namespace
-  project_prefix = var.project_prefix
-  site_name      = module.xc-virtual-site.virtual_site_name
+  source                    = "./xc-re-vk8s"
+  tenant                    = var.tenant
+  namespace                 = var.namespace
+  project_prefix            = var.project_prefix
+  sentence_app_virtual_site = module.xc-virtual-site-sentence.virtual_site_name
+  nginx_auth_virtual_site   = module.xc-virtual-site-nginx.virtual_site_name
 }
 
 module "xc-re-vk8s-kubeconfig" {
@@ -34,16 +44,16 @@ module "xc-re-vk8s-kubeconfig" {
 }
 
 module "install-sentence-app" {
-  source                = "./install-sentence-app"
-  tenant                = var.tenant
-  tenant_suffix         = var.tenant_suffix
-  namespace             = var.namespace
-  app_deployment_region = var.sentence_app_region
-  project_prefix        = var.project_prefix
-  virtual_site_name     = module.xc-virtual-site.virtual_site_name
-  kubeconfig_file       = module.xc-re-vk8s-kubeconfig.kubeconfig_file
-  app_name              = var.sentence_app_name
-  app_fqdn              = var.sentence_app_fqdn
+  source                  = "./install-sentence-app"
+  tenant                  = var.tenant
+  tenant_suffix           = var.tenant_suffix
+  namespace               = var.namespace
+  project_prefix          = var.project_prefix
+  virtual_site_name       = var.sentence_app_virtual_site
+  nginx_auth_virtual_site = module.xc-virtual-site-nginx.virtual_site_name
+  kubeconfig_file         = module.xc-re-vk8s-kubeconfig.kubeconfig_file
+  app_name                = var.sentence_app_name
+  app_fqdn                = var.sentence_app_fqdn
 }
 
 module "install-nginx-auth" {
@@ -51,9 +61,8 @@ module "install-nginx-auth" {
   tenant                         = var.tenant
   tenant_suffix                  = var.tenant_suffix
   namespace                      = var.namespace
-  app_deployment_region          = var.nginx_app_region
   project_prefix                 = var.project_prefix
-  virtual_site_name              = module.xc-virtual-site.virtual_site_name
+  virtual_site_name              = var.nginx_auth_virtual_site
   kubeconfig_file                = module.xc-re-vk8s-kubeconfig.kubeconfig_file
   app_name                       = var.nginx_app_name
   app_fqdn                       = var.nginx_app_fqdn

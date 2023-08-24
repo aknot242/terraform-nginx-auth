@@ -7,11 +7,16 @@ variable "namespace" {
   type = string
 }
 
-variable "project_prefix" {
+variable "sentence_app_virtual_site" {
   type = string
+  default = "sentence-app-vs"
 }
 
-variable "site_name" {
+variable "nginx_auth_virtual_site" {
   type = string
-  description = "The string referencing an XC site o deploy to"
+  default = "nginx-auth-vs"
+}
+
+variable "project_prefix" {
+  type = string
 }

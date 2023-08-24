@@ -17,11 +17,11 @@ variable "project_prefix" {
   type = string
 }
 
-variable "app_deployment_region" {
+variable "virtual_site_name" {
   type = string
 }
 
-variable "virtual_site_name" {
+variable "nginx_auth_virtual_site" {
   type = string
 }
 

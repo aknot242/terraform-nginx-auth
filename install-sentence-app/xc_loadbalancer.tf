@@ -60,7 +60,7 @@ resource "volterra_http_loadbalancer" "lb_https" {
     advertise_where {
       vk8s_service {
         virtual_site {
-          name      = var.virtual_site_name
+          name      = var.nginx_auth_virtual_site
           namespace = var.namespace
         }
       }
