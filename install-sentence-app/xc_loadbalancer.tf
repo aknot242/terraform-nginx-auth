@@ -85,20 +85,8 @@ resource "volterra_http_loadbalancer" "lb_https" {
       }
     }
   }
-  https {
-    add_hsts              = false
-    http_redirect         = true
-    enable_path_normalize = true
-    tls_parameters {
-      no_mtls = true
-      tls_certificates {
-        certificate_url = format("string:///%s", base64encode(tls_self_signed_cert.sentence_lb_self_signed_cert.cert_pem))
-        private_key {
-          clear_secret_info {
-            url = format("string:///%s", base64encode(tls_private_key.sentence_lb_private_key.private_key_pem))
-          }
-        }
-      }
-    }
+  http {
+    dns_volterra_managed = false
+    port                 = "80"
   }
 }

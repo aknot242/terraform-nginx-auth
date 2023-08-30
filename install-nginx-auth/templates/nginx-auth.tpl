@@ -114,13 +114,8 @@ data:
             auth_jwt "" token=$session_jwt;
             error_page 401 = @do_oidc_flow;
             auth_jwt_key_request /_jwks_uri;
-            # proxy_http_version 1.1;
-            # proxy_read_timeout 300;
-            # proxy_connect_timeout 300;
-            proxy_ssl_server_name on;
-            proxy_ssl_name $upstream_host_name;
             proxy_set_header Host $upstream_host_name;
-            proxy_pass https://$upstream_host_name:443;
+            proxy_pass http://$upstream_host_name;
             access_log /nginx/var/log/nginx/access.log main_jwt;
         }
     }

@@ -42,12 +42,6 @@ variable "app_fqdn" {
   type = string
 }
 
-variable "sentence_lb_cert_validity_period_hours" {
-  type        = number
-  description = "The validity period of the certificate generated for the Sentence app LB server certificate"
-  default     = 8760 # approx 1 year
-}
-
 variable "tmp_folder" {
   type    = string
   default = "tmp"
