@@ -1,3 +1,5 @@
 # terraform-nginx-auth
 
-Repo to accompany F5 DevCentral Article located here (TBD).
+Terraform solution to accompany F5 DevCentral Article "Bolt-on Auth with NGINX and F5 Distributed Cloud" located here (link TBD).
+
+<image src="images/arch-white.png">
