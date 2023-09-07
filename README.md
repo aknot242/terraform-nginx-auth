@@ -254,4 +254,4 @@ terraform destroy
 
 >**NOTE:** Remember to delete the API Credential and namespace you created in the F5 Distributed Cloud console if you no longer need them.
 
-[Back to article]()
+[Back to DevCentral article](https://community.f5.com/t5/technical-articles/bolt-on-auth-with-nginx-and-f5-distributed-cloud/ta-p/320879)
