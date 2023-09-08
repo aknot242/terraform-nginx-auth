@@ -75,7 +75,7 @@ To do this, we need to configure Azure AD to assume the role of Identity Provide
 
     ![New registration](images/2201.png)
 
-3. Give the application a name. This is the name that will appear in the Microsoft authorization request dialog when we test the solution later on. Select “Web” for Redirect URI type, and specify a redirect URL for this application. The URL must exactly match the hostname and port of the F5 Distributed Cloud HTTP Load Balancer that will be created when we use Terraform to deploy in a later step. The format needs to be: `https://your-fqdn-here:443/_codexch`
+3. Give the application a name. This is the name that will appear in the Microsoft authorization request dialog when we test the solution later on. Select “Web” for Redirect URI type, and specify a redirect URI for this application. The URI must exactly match the hostname and port of the F5 Distributed Cloud HTTP Load Balancer that will be created when we use Terraform to deploy in a later step. The format needs to be: `https://your-fqdn-here:443/_codexch`
 
     ![Application name](images/2202.png)
 
