@@ -34,7 +34,7 @@ Since NGINX Plus is commercial software, we will need to host the image we build
     git clone https://github.com/f5devcentral/nginx-unprivileged-f5xc
     ```
 
-2. If you already have an NGINX plus license, download the crt and key files from the MyF5 portal. New to NGINX Plus? You can [request a free 30-day trial](https://www.nginx.com/free-trial-request/) which includes a crt and key.
+2. If you already have an NGINX Plus license, download the crt and key files from the MyF5 portal. New to NGINX Plus? You can [request a free 30-day trial](https://www.nginx.com/free-trial-request/) which includes a crt and key.
 
 3. Copy the nginx-repo.crt and nginx-repo.key files to the root of the cloned repo. **Do not commit these files to Git!**
 
@@ -99,9 +99,9 @@ To do this, we need to configure Azure AD to assume the role of Identity Provide
 
 ### Deploying the Solution
 
-Earlier I mentioned that we would be configuring the cluster and deploying the application and NGINX proxy. We will use Terraform to do this, with the help of another GitHub repository.
+Earlier I mentioned that we would be configuring the cluster and deploying the application and NGINX Plus proxy. We will use Terraform to do this, with the help of another GitHub repository.
 
-1. In the F5 Distributed Cloud console, create a new application namespace. Application namespaces create a logical separation for enhanced security between applications. This new namespace will be for the Sentence app and the NGINX OIDC auth service. For example, “demo-nginx-auth”.
+1. In the F5 Distributed Cloud console, create a new application namespace. Application namespaces create a logical separation for enhanced security between applications. This new namespace will be for the Sentence app and the NGINX Plus OIDC auth service. For example, “demo-nginx-auth”.
 
 2. In the F5 Distributed Cloud console, [create a Service Credential](https://docs.cloud.f5.com/docs/how-to/user-mgmt/credentials) that has the admin role for this newly created namespace.
 
@@ -129,11 +129,11 @@ Earlier I mentioned that we would be configuring the cluster and deploying the a
 
         > **NOTE:** The value on line **13 _must_** match the fqdn you used in step 3 of the “Create the Azure OIDC Identity Provider” section of this guide. If you need to, you can change the URL you set in that step using the Azure Portal.
 
-    5. By default, the Sentence app will deploy to a Kubernetes cluster in the Dallas, Texas (U.S.) region, and the NGINX OIDC auth service to a Kubernetes cluster in Seattle, Washington (U.S.). If you would like to update these, update lines **11** and **14** in your **terraform.tfvars** using values from this list.
+    5. By default, the Sentence app will deploy to a Kubernetes cluster in the Dallas, Texas (U.S.) region, and the NGINX Plus OIDC auth service to a Kubernetes cluster in Seattle, Washington (U.S.). If you would like to update these, update lines **11** and **14** in your **terraform.tfvars** using values from this list.
 
-### Configure NGINX for OIDC Authorization
+### Configure NGINX Plus for OIDC Authorization
 
-To secure the Sentence app and API, NGINX needs to be configured variables that are required in the OIDC authorization flow. For details about this solution, see the [nginx-openid-connect repo](https://github.com/nginxinc/nginx-openid-connect). We will use Terraform variables to inject the secret values into the NGINX config that will be installed in Kubernetes.
+To secure the Sentence app and API, NGINX Plus needs to be configured variables that are required in the OIDC authorization flow. For details about this solution, see the [nginx-openid-connect repo](https://github.com/nginxinc/nginx-openid-connect). We will use Terraform variables to inject the secret values into the NGINX Plus config that will be installed in Kubernetes.
 
 > **NOTE:** You will be populating the file below with sensitive information. **Do not** commit this file into a public repository. Ideally, these values should be stored in a secure enclave to prevent unintended disclosure.
 
@@ -183,7 +183,7 @@ We will run Terraform plan and apply in 2 different phases: One to create the F5
 3. Scroll through the list of all the resources that Terraform plans to create. Note all the resources that will be created:
 
     * A Virtual Kubernetes cluster, deployed in 2 different regions
-    * A Kubeconfig file used to deploy the Sentence app and NGINX OIDC manifests to the newly created
+    * A Kubeconfig file used to deploy the Sentence app and NGINX Plus OIDC manifests to the newly created
 
 4. If you are satisfied with the list of resources created and there were no errors reported by the previous step, run Terraform apply:
 
@@ -218,7 +218,7 @@ We will run Terraform plan and apply in 2 different phases: One to create the F5
 
 ### Test the Deployed Solution
 
-1. In your browser, navigate to the NGINX OIDC auth site. Hint: this is the host you entered into the terraform.tfvars file, line **13**.
+1. In your browser, navigate to the NGINX Plus OIDC auth site. Hint: this is the host you entered into the terraform.tfvars file, line **13**.
 
 2. You should be redirected to Microsoft login screens, requesting your authorization for the application to use your ID to authenticate to the Sentence app.
 
