@@ -13,8 +13,8 @@ This solution makes modest use of automation for the deployment. However, there 
 * Docker Desktop
 * Terraform
 * A GitHub account
-* An Azure account (we will be using Azure AD as our OIDC Identity Provider)
-* Azure Active Directory configured with user accounts
+* An Azure account (we will be using Microsoft Entra ID ([formerly Azure Active Directory](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/new-name)) as our OIDC Identity Provider)
+* Microsoft Entra ID configured with user accounts
 * Git
 * An F5 Distributed Cloud account
 
@@ -65,35 +65,35 @@ In this solution, we will be leveraging the authorization code flow, as depicted
 
 ![Auth Flow Diagram](images/2212.png)
 
-To do this, we need to configure Azure AD to assume the role of Identity Provider (IDP).
+To do this, we need to configure Microsoft Entra ID to assume the role of Identity Provider (IDP).
 
-1. Log into the [Azure Portal](https://portal.azure.com/) and select “Active Directory”:
+1. Log into the [Azure Portal](https://portal.azure.com/) and select "Microsoft Entra ID":
 
-    ![Active Directory](images/2207.png)
+    ![Microsoft Entra ID](images/2207.png)
 
-2. Click “App registrations” then “New registration”:
+2. Click "App registrations" then "New registration":
 
     ![New registration](images/2201.png)
 
-3. Give the application a name. This is the name that will appear in the Microsoft authorization request dialog when we test the solution later on. Select “Web” for Redirect URI type, and specify a redirect URI for this application. The URI must exactly match the hostname and port of the F5 Distributed Cloud HTTP Load Balancer that will be created when we use Terraform to deploy in a later step. The format needs to be: `https://your-fqdn-here:443/_codexch`
+3. Give the application a name. This is the name that will appear in the Microsoft authorization request dialog when we test the solution later on. Select "Web" for Redirect URI type, and specify a redirect URI for this application. The URI must exactly match the hostname and port of the F5 Distributed Cloud HTTP Load Balancer that will be created when we use Terraform to deploy in a later step. The format needs to be: `https://your-fqdn-here:443/_codexch`
 
     ![Application name](images/2202.png)
 
 4. Click "Register".
 
-5. Click “Certificates & secrets”, then “New client secret”:
+5. Click "Certificates & secrets", then "New client secret":
 
     ![New client secret](images/2208.png)
 
-6. In the resulting dialog, enter any value for the description, and choose an appropriate expiration date. Click “Add”:
+6. In the resulting dialog, enter any value for the description, and choose an appropriate expiration date. Click "Add":
 
     ![Description and expiration](images/2211.png)
 
-7. The new client secret will have been created. Copy the secret’s “Value” and keep it somewhere safe for a later step. **_Do this now - you will not have the ability to retrieve it later._**
+7. The new client secret will have been created. Copy the secret’s "Value" and keep it somewhere safe for a later step. **_Do this now - you will not have the ability to retrieve it later._**
 
     ![Secret value](images/2204.png)
 
-8. Click “Overview”. Locate and copy the **Application (client) ID** and **Directory (tenant) ID** values for use in a later step:
+8. Click "Overview". Locate and copy the **Application (client) ID** and **Directory (tenant) ID** values for use in a later step:
 
     ![Overview](images/2213.png)
 
@@ -101,7 +101,7 @@ To do this, we need to configure Azure AD to assume the role of Identity Provide
 
 Earlier I mentioned that we would be configuring the cluster and deploying the application and NGINX Plus proxy. We will use Terraform to do this, with the help of another GitHub repository.
 
-1. In the F5 Distributed Cloud console, create a new application namespace. Application namespaces create a logical separation for enhanced security between applications. This new namespace will be for the Sentence app and the NGINX Plus OIDC auth service. For example, “demo-nginx-auth”.
+1. In the F5 Distributed Cloud console, create a new application namespace. Application namespaces create a logical separation for enhanced security between applications. This new namespace will be for the Sentence app and the NGINX Plus OIDC auth service. For example, "demo-nginx-auth".
 
 2. In the F5 Distributed Cloud console, [create a Service Credential](https://docs.cloud.f5.com/docs/how-to/user-mgmt/credentials) that has the admin role for this newly created namespace.
 
@@ -123,11 +123,11 @@ Earlier I mentioned that we would be configuring the cluster and deploying the a
 
     2. Update line **3** with the namespace name that you created in step 1.
 
-    3. Update lines **5-8** with GitHub container registry information from the “Building the NGINX Plus Container Image” section of this guide.
+    3. Update lines **5-8** with GitHub container registry information from the "Building the NGINX Plus Container Image" section of this guide.
 
-    4. Update lines **10** and **13**. Change the “example.com” to a custom domain name you own that has been delegated to F5 Distributed Cloud. See [Domain Delegation](https://docs.cloud.f5.com/docs/how-to/app-networking/domain-delegation) for details on how to set this up in your tenant.
+    4. Update lines **10** and **13**. Change the "example.com" to a custom domain name you own that has been delegated to F5 Distributed Cloud. See [Domain Delegation](https://docs.cloud.f5.com/docs/how-to/app-networking/domain-delegation) for details on how to set this up in your tenant.
 
-        > **NOTE:** The value on line **13 _must_** match the fqdn you used in step 3 of the “Create the Azure OIDC Identity Provider” section of this guide. If you need to, you can change the URL you set in that step using the Azure Portal.
+        > **NOTE:** The value on line **13 _must_** match the fqdn you used in step 3 of the "Create the Azure OIDC Identity Provider" section of this guide. If you need to, you can change the URL you set in that step using the Azure Portal.
 
     5. By default, the Sentence app will deploy to a Kubernetes cluster in the Dallas, Texas (U.S.) region, and the NGINX Plus OIDC auth service to a Kubernetes cluster in Seattle, Washington (U.S.). If you would like to update these, update lines **11** and **14** in your **terraform.tfvars** using values from this list.
 
@@ -139,11 +139,11 @@ To secure the Sentence app and API, NGINX Plus needs to be configured variables 
 
 1. In your terraform.tfvars file, make the following updates:
 
-    1. On line **16**, replace **_&lt;Azure Tenant (directory) ID&gt;_** with the value from Step 8 in the “Create the Azure OIDC Identity Provider” section earlier in this guide.
+    1. On line **16**, replace **_&lt;Azure Tenant (directory) ID&gt;_** with the value from Step 8 in the "Create the Azure OIDC Identity Provider" section earlier in this guide.
 
-    2. On line **17**: Replace **_&lt;Azure Application (client) ID&gt;_** with the value from Step 8 in the “Create the Azure OIDC Identity Provider” section earlier in this guide.
+    2. On line **17**: Replace **_&lt;Azure Application (client) ID&gt;_** with the value from Step 8 in the "Create the Azure OIDC Identity Provider" section earlier in this guide.
 
-    3. On line **18**: Replace **_&lt;Azure Client Secret Value&gt;_** with the value from Step 7 in the “Create the Azure OIDC Identity Provider” section earlier in this guide.
+    3. On line **18**: Replace **_&lt;Azure Client Secret Value&gt;_** with the value from Step 7 in the "Create the Azure OIDC Identity Provider" section earlier in this guide.
 
     4. Optionally, for extra security, you can update the random phrase on line **19** used as an OIDC hmac key to ensure nonce values used in the authorization flow are unpredictable.
 
@@ -191,7 +191,7 @@ We will run Terraform plan and apply in 2 different phases: One to create the F5
     terraform apply -target=module.xc-re-vk8s-kubeconfig
     ```
 
-    >**NOTE:** When prompted to confirm the apply step, type “yes”.
+    >**NOTE:** When prompted to confirm the apply step, type "yes".
 
 5. Now that the cluster has been provisioned, run a Terraform plan to review the remainder of the solution to be deployed:
 
@@ -212,7 +212,7 @@ We will run Terraform plan and apply in 2 different phases: One to create the F5
     terraform apply
     ```
 
-    > **NOTE:** When prompted to confirm the apply step, type “yes”.
+    > **NOTE:** When prompted to confirm the apply step, type "yes".
 
 8. If there are no errors, the entire solution is now deployed.
 
@@ -230,23 +230,23 @@ We will run Terraform plan and apply in 2 different phases: One to create the F5
 
 1. Log into the F5 Distributed Cloud console.
 
-2. Navigate to “Distributed Apps”.
+2. Navigate to "Distributed Apps".
 
 3. Select the namespace you created earlier in the top left menu.
 
-4. Click on “Applications” -> “Virtual K8s”.
+4. Click on "Applications" -> "Virtual K8s".
 
-5. Note that a cluster has been created and is showing a “Ready” status:
+5. Note that a cluster has been created and is showing a "Ready" status:
 
     ![Deployment ready](images/2215.png)
 
 6. Click on the cluster link. Here you can examine the Services, Deployment objects, and Pods that were deployed to the cluster.
 
-7. Click “Load Balancers” -> “HTTP Load Balancers”. Click on each of the Load Balancers that were created and examine the metrics available. Note that the deployed applications are healthy.
+7. Click "Load Balancers" -> "HTTP Load Balancers". Click on each of the Load Balancers that were created and examine the metrics available. Note that the deployed applications are healthy.
 
 ### Cleanup
 
-A benefit of using Terraform is that removing all the resources it created in F5 Distributed Cloud is just as easy as creating them. For this, use Terraform destroy, and type “yes” when prompted:
+A benefit of using Terraform is that removing all the resources it created in F5 Distributed Cloud is just as easy as creating them. For this, use Terraform destroy, and type "yes" when prompted:
 
 ```shell
 terraform destroy
