@@ -52,7 +52,7 @@ Since NGINX Plus is commercial software, we will need to host the image we build
     export $GITHUB\_TOKEN=<your GitHub developer token> 
     echo $GITHUB\_TOKEN | docker login ghcr.io -u $GITHUB\_USER --password-stdin 
     docker tag nginx-oidc ghcr.io/$GITHUB\_USER/nginx-oidc 
-    docker push ghcr.io/$GITHUB\_USER/nginx-plus-ingress
+    docker push ghcr.io/$GITHUB\_USER/nginx-oidc
     ```
 
 6. In your browser, navigate to `https://github.com/<your-github-account>?tab=packages` to ensure that it has been published. **Verify that the image is private!**
