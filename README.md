@@ -20,7 +20,7 @@ This solution makes modest use of automation for the deployment. However, there 
 
 ### Building the NGINX Plus Container Image
 
-To enable [OpenID Connect-based single sign-on](https://github.com/nginxinc/nginx-openid-connect), we will need to employ the use of [NGINX Plus](https://www.nginx.com/products/nginx/). We will create a container image of NGINX Plus, complete with the [auth\_jwt](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html) and [njs](https://nginx.org/en/docs/njs/index.html) modules. The following is a high-level overview of how this solution works:
+To enable [OpenID Connect-based single sign-on](https://github.com/nginxinc/nginx-openid-connect), we will need to employ the use of [NGINX Plus](https://www.nginx.com/products/nginx/). We will create a container image of NGINX Plus, complete with the [auth_jwt](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html) and [njs](https://nginx.org/en/docs/njs/index.html) modules. The following is a high-level overview of how this solution works:
 
 ![Module overview](images/2205.png)
 
@@ -41,18 +41,18 @@ Since NGINX Plus is commercial software, we will need to host the image we build
 4. Run the Docker build command:
 
     ```shell
-    export DOCKER\_DEFAULT\_PLATFORM=linux/amd64 
-    sudo DOCKER\_BUILDKIT=1 docker build --no-cache --secret id=nginx-key,src=nginx-repo.key --secret id=nginx-crt,src=nginx-repo.crt -t nginx-oidc .
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64 
+    sudo DOCKER_BUILDKIT=1 docker build --no-cache --secret id=nginx-key,src=nginx-repo.key --secret id=nginx-crt,src=nginx-repo.crt -t nginx-oidc .
     ```
 
 5. If the image build was successful, login to ghcr [using a developer token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic), tag the image, and push it to the registry:
 
     ```shell
-    export $GITHUB\_USER=<your GitHub account> 
-    export $GITHUB\_TOKEN=<your GitHub developer token> 
-    echo $GITHUB\_TOKEN | docker login ghcr.io -u $GITHUB\_USER --password-stdin 
-    docker tag nginx-oidc ghcr.io/$GITHUB\_USER/nginx-oidc 
-    docker push ghcr.io/$GITHUB\_USER/nginx-oidc
+    export $GITHUB_USER=<your GitHub account> 
+    export $GITHUB_TOKEN=<your GitHub developer token> 
+    echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_USER --password-stdin 
+    docker tag nginx-oidc ghcr.io/$GITHUB_USER/nginx-oidc 
+    docker push ghcr.io/$GITHUB_USER/nginx-oidc
     ```
 
 6. In your browser, navigate to `https://github.com/<your-github-account>?tab=packages` to ensure that it has been published. **Verify that the image is private!**
@@ -119,7 +119,7 @@ Earlier I mentioned that we would be configuring the cluster and deploying the a
 
     1. Update lines **1-2** with information from your F5 Distributed Cloud tenant information. Both values can be seen in **Tenant ID** field of the Distributed Cloud console’s _Administration -> Tenant Overview_ page.
 
-        Example: **Tenant ID: _&lt;tenant&gt;_\-_&lt;tenant\_suffix&gt;_**
+        Example: **Tenant ID: _&lt;tenant&gt;_-_&lt;tenant_suffix&gt;_**
 
     2. Update line **3** with the namespace name that you created in step 1.
 
@@ -160,8 +160,8 @@ To programmatically interact with F5 Distributed Cloud, you must create an API c
 3. In the shell you will execute Terraform in, set the following environment variables:
 
     ```shell
-    export VES\_P12\_PASSWORD=<your .p12 file password>
-    export VOLT\_API\_P12\_FILE=<full path to your .p12 file>
+    export VES_P12_PASSWORD=<your .p12 file password>
+    export VOLT_API_P12_FILE=<full path to your .p12 file>
     ```
 
 ### Deploy the Solution with Terraform
